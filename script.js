@@ -27,3 +27,21 @@ function animateBars() {
 }
 
 animateBars();
+function sendMessage() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const message = document.getElementById('message').value;
+
+  if (!name || !email || !message) {
+    alert('Please fill all fields!');
+    return;
+  }
+
+  // Show success message
+  document.getElementById('success-msg').style.display = 'block';
+
+  // Clear the form
+  document.getElementById('name').value = '';
+  document.getElementById('email').value = '';
+  document.getElementById('message').value = '';
+}

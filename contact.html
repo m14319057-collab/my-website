@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Contact - Mani Kumar</title>
+    <link rel="stylesheet" href="style.css"/>
+  </head>
+  <body>
+
+    <nav>
+      <span class="logo">Mani.dev</span>
+      <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="projects.html">Projects</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </nav>
+
+    <div style="padding: 40px 20px; max-width: 600px; margin: 0 auto;">
+
+      <section>
+        <h1>Contact Me 📬</h1>
+        <p style="margin: 12px 0 24px;">Fill the form below and I'll get back to you!</p>
+
+        <div class="form-group">
+          <label>Your Name</label>
+          <input type="text" id="name" placeholder="Enter your name"/>
+        </div>
+
+        <div class="form-group">
+          <label>Your Email</label>
+          <input type="email" id="email" placeholder="Enter your email"/>
+        </div>
+
+        <div class="form-group">
+          <label>Message</label>
+          <textarea id="message" rows="5" placeholder="Write your message..."></textarea>
+        </div>
+
+        <button onclick="sendMessage()" class="btn" style="width:100%; margin-top: 8px;">
+          Send Message 🚀
+        </button>
+
+        <div id="success-msg" style="display:none; margin-top: 16px; padding: 16px; background: #d1fae5; border-radius: 8px; color: #065f46;">
+          ✅ Message sent successfully! I'll reply soon.
+        </div>
+
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
