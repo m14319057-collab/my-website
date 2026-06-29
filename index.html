@@ -80,6 +80,26 @@
       <p>© 2026 Mani</p>
     </footer>
 <script src="script.js"></script>
+<!-- AI Chat Widget -->
+    <div id="chat-bubble" onclick="toggleChat()">💬</div>
+
+    <div id="chat-box">
+      <div id="chat-header">
+        <span>🤖 Ask about Mani</span>
+        <button onclick="toggleChat()">✕</button>
+      </div>
+      <div id="chat-messages">
+        <div class="bot-msg">Hi! I'm Mani's AI assistant. Ask me anything about him! 👋</div>
+      </div>
+      <div id="chat-input-area">
+        <input type="text" id="chat-input" placeholder="Ask something..." onkeypress="handleKey(event)"/>
+        <button onclick="sendChat()">Send</button>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
 </body>
   </body>
 </html>

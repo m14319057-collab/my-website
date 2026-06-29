@@ -271,4 +271,119 @@ section {
 .form-group textarea:focus {
   border-color: #4ade80;
 }
+/* Chat Bubble */
+#chat-bubble {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  background: #4ade80;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  z-index: 999;
+  transition: transform 0.2s;
+}
 
+#chat-bubble:hover {
+  transform: scale(1.1);
+}
+
+/* Chat Box */
+#chat-box {
+  position: fixed;
+  bottom: 90px;
+  right: 24px;
+  width: 320px;
+  height: 420px;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  display: none;
+  flex-direction: column;
+  z-index: 999;
+  overflow: hidden;
+}
+
+#chat-header {
+  background: #1a1a2e;
+  color: white;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#chat-header button {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+#chat-messages {
+  flex: 1;
+  padding: 16px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bot-msg {
+  background: #f0f4f8;
+  padding: 10px 14px;
+  border-radius: 12px 12px 12px 0;
+  font-size: 0.9rem;
+  max-width: 85%;
+}
+
+.user-msg {
+  background: #4ade80;
+  color: #1a1a2e;
+  padding: 10px 14px;
+  border-radius: 12px 12px 0 12px;
+  font-size: 0.9rem;
+  max-width: 85%;
+  align-self: flex-end;
+}
+
+.loading-msg {
+  background: #f0f4f8;
+  padding: 10px 14px;
+  border-radius: 12px 12px 12px 0;
+  font-size: 0.9rem;
+  color: #888;
+}
+
+#chat-input-area {
+  padding: 12px;
+  border-top: 1px solid #e2e8f0;
+  display: flex;
+  gap: 8px;
+}
+
+#chat-input {
+  flex: 1;
+  padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  outline: none;
+  font-size: 0.9rem;
+}
+
+#chat-input-area button {
+  background: #4ade80;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #1a1a2e;
+}
