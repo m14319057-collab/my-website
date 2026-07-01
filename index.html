@@ -1,32 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>My Profile</title>
     <link rel="stylesheet" href="style.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
+    <div id="progress-bar"></div>
+    <div id="loader">
+  <div class="loader-content">
+    <div class="loader-logo"></div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
   <nav>
   <span class="logo">Mani.MK</span>
-  <div class="nav-links">
+  <div class="nav-links" id="nav-links">
     <a href="index.html">Home</a>
     <a href="projects.html">Projects</a>
     <a href="contact.html">Contact</a>
   </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
 </nav>
   <section class="about" id="about">
 <section class="projects" id="projects">
 <section class="skills" id="skills">
     <header>
-      <h1 id="greeting">Hi, I'm Mani  👋</h1>
-      <p>I am an ECE student.pursuing btech in snist college</p>
-      <button onclick="toggleDarkMode()" class="btn">🌙 Dark Mode</button>
+  <h1 id="greeting"><span id="typed-text"></span><span class="cursor">|</span></h1>
+  <p class="hero-subtitle">ECE Student at SNIST College · Building AI-powered web apps</p>
+  <div class="hero-buttons">
+    <button onclick="toggleDarkMode()" class="btn">🌙 Dark Mode</button>
+  <div class="hero-badge">👋 Available for opportunities</div>
+    <a href="projects.html" class="btn">View Projects 🚀</a>
+    <a href="contact.html" class="btn btn-outline">Contact Me</a>
+  </div>
+</header>
     </header>
    <a href="mailto:manikumarangajala@email.com" class="btn">Contact Me</a>
     <section class="about">
   <div class="profile-pic">
-    <div class="avatar">M</div>
+    <img src="photo.jpg" alt="Mani Kumar" class="avatar-photo"/>
   </div>
   <div class="bio">
     <h2>About Me</h2>
@@ -44,11 +61,19 @@
         <li>HTML & CSS (learning!)</li>
       </ul>
     </section>
-
     <footer>
-      <p>© 2026 Mani</p>
-    </footer>
-<script src="script.js"></script>
+  <div class="footer-content">
+    <span class="logo">Mani.dev</span>
+    <p>Built with ❤️ using HTML, CSS & JavaScript</p>
+    <div class="footer-links">
+      <a href="https://github.com/m14319057-collab" target="_blank">GitHub</a>
+      <a href="contact.html">Contact</a>
+    </div>
+  </div>
+  <p class="footer-copy">© 2026 Mani Kumar. All rights reserved.</p>
+</footer>
+
+    script.js"></script>
 <!-- AI Chat Widget -->
     <div id="chat-bubble" onclick="toggleChat()">💬</div>
 
@@ -66,9 +91,10 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+
   </body>
 </html>
 </body>
   </body>
 </html>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>

@@ -5,17 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Contact - Mani Kumar</title>
     <link rel="stylesheet" href="style.css"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   </head>
   <body>
+    <div id="progress-bar"></div>
+    <div id="loader">
+  <div class="loader-content">
+    <div class="loader-logo">M</div>
+    <div class="loader-bar"><div class="loader-fill"></div></div>
+  </div>
+</div>
 
     <nav>
-      <span class="logo">Mani.dev</span>
-      <div class="nav-links">
-        <a href="index.html">Home</a>
-        <a href="projects.html">Projects</a>
-        <a href="contact.html">Contact</a>
-      </div>
-    </nav>
+  <span class="logo">Mani.dev</span>
+  <div class="nav-links" id="nav-links">
+    <a href="index.html">Home</a>
+    <a href="projects.html">Projects</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <button class="hamburger" onclick="toggleMenu()">☰</button>
+</nav>
 
     <div style="padding: 40px 20px; max-width: 600px; margin: 0 auto;">
 
@@ -67,7 +76,7 @@
       </div>
     </div>
 
-    <script src="script.js"></script>
+   
   </body>
 </html>
   </body>
