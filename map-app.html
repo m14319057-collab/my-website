@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Map Relocation App</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0f0f1a;
+      color: white;
+      min-height: 100vh;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: rgba(26,26,46,0.95);
+      border-bottom: 1px solid #2d2d4e;
+    }
+
+    .logo { color: #4ade80; font-weight: 700; font-size: 1.1rem; }
+    nav a { color: #94a3b8; text-decoration: none; font-size: 0.9rem; }
+    nav a:hover { color: #4ade80; }
+
+    .app-container {
+      display: flex;
+      height: calc(100vh - 57px);
+    }
+
+    /* LEFT PANEL */
+    .panel {
+      width: 340px;
+      background: #1a1a2e;
+      padding: 24px;
+      overflow-y: auto;
+      border-right: 1px solid #2d2d4e;
+      flex-shrink: 0;
+    }
+
+    .panel h2 {
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+      color: #4ade80;
+    }
+
+    .filter-group {
+      margin-bottom: 20px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: #94a3b8;
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+
+    .filter-group select {
+      width: 100%;
+      padding: 10px 12px;
+      background: #0f0f1a;
+      border: 1px solid #2d2d4e;
+      border-radius: 8px;
+      color: white;
+      font-family: 'Inter', sans-serif;
+      font-size: 0.9rem;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .filter-group select:focus {
+      border-color: #4ade80;
+    }
+
+    .search-btn {
+      width: 100%;
+      padding: 12px;
+      background: linear-gradient(90deg, #4ade80, #22d3ee);
+      border: none;
+      border-radius: 8px;
+      color: #0f0f1a;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      margin-bottom: 24px;
+      transition: opacity 0.2s;
+    }
+
+    .search-btn:hover { opacity: 0.9; }
+
+    .location-info {
+      background: #0f0f1a;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 20px;
+      border: 1px solid #2d2d4e;
+      font-size: 0.85rem;
+      color: #94a3b8;
+    }
+
+    .location-info span {
+      color: #4ade80;
+      font-weight: 600;
+    }
+
+    /* RESULTS */
+    .results-title {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      font-weight: 500;
+    }
+
+    .city-card {
+      background: #0f0f1a;
+      border: 1px solid #2d2d4e;
+      border-radius: 10px;
+      padding: 14px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .city-card:hover {
+      border-color: #4ade80;
+      transform: translateX(4px);
+    }
+
+    .city-card h3 {
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .city-card p {
+      font-size: 0.8rem;
+      color: #64748b;
+      margin-bottom: 8px;
+    }
+
+    .city-tags {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .city-tag {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+
+    .tag-climate { background: #064e3b; color: #4ade80; }
+    .tag-jobs { background: #1e3a5f; color: #60a5fa; }
+    .tag-cost { background: #3b1f5e; color: #c084fc; }
+
+    .match-score {
+      float: right;
+      background: linear-gradient(90deg, #4ade80, #22d3ee);
+      color: #0f0f1a;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 12px;
+    }
+
+    /* MAP */
+    #map {
+      flex: 1;
+      z-index: 1;
+    }
+
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: #64748b;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <span class="logo">🗺️ Relocation App</span>
+  <a href="index.html">← Back to Portfolio</a>
+</nav>
+
+<div class="app-container">
+
+  <!-- LEFT PANEL -->
+  <div class="panel">
+    <h2>Find Your City 🏙️</h2>
+
+    <!-- Current Location -->
+    <div class="location-info" id="location-info">
+      📍 Detecting your location...
+    </div>
+
+    <!-- Filters -->
+    <div class="filter-group">
+      <label>🌡️ Climate Preference</label>
+      <select id="climate">
+        <option value="any">Any Climate</option>
+        <option value="tropical">Tropical (hot & humid)</option>
+        <option value="warm">Warm (mild & sunny)</option>
+        <option value="cold">Cold (cool & snowy)</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>💼 Job Opportunities</label>
+      <select id="jobs">
+        <option value="any">Any Industry</option>
+        <option value="tech">Tech & IT</option>
+        <option value="business">Business & Finance</option>
+        <option value="education">Education & Research</option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label>💰 Cost of Living</label>
+      <select id="cost">
+        <option value="any">Any Budget</option>
+        <option value="cheap">Affordable</option>
+        <option value="moderate">Moderate</option>
+        <option value="expensive">Premium</option>
+      </select>
+    </div>
+
+    <button class="search-btn" onclick="findCities()">
+      🔍 Find Best Cities
+    </button>
+
+    <!-- Results -->
+    <div class="results-title" id="results-title"></div>
+    <div id="city-results"></div>
+  </div>
+
+  <!-- MAP -->
+  <div id="map"></div>
+
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// City Database
+const cities = [
+  { name: "Bangalore", country: "India", lat: 12.97, lng: 77.59, climate: "warm", jobs: "tech", cost: "moderate", desc: "Silicon Valley of India", emoji: "🇮🇳" },
+  { name: "Hyderabad", country: "India", lat: 17.38, lng: 78.47, climate: "warm", jobs: "tech", cost: "cheap", desc: "IT hub with low cost of living", emoji: "🇮🇳" },
+  { name: "Mumbai", country: "India", lat: 19.07, lng: 72.87, climate: "tropical", jobs: "business", cost: "expensive", desc: "Financial capital of India", emoji: "🇮🇳" },
+  { name: "Delhi", country: "India", lat: 28.61, lng: 77.20, climate: "warm", jobs: "business", cost: "moderate", desc: "Capital city with vast opportunities", emoji: "🇮🇳" },
+  { name: "Pune", country: "India", lat: 18.52, lng: 73.85, climate: "warm", jobs: "tech", cost: "cheap", desc: "Growing IT city with great weather", emoji: "🇮🇳" },
+  { name: "Singapore", country: "Singapore", lat: 1.35, lng: 103.82, climate: "tropical", jobs: "tech", cost: "expensive", desc: "Asian tech hub", emoji: "🇸🇬" },
+  { name: "Dubai", country: "UAE", lat: 25.20, lng: 55.27, climate: "warm", jobs: "business", cost: "expensive", desc: "Global business hub", emoji: "🇦🇪" },
+  { name: "Berlin", country: "Germany", lat: 52.52, lng: 13.40, climate: "cold", jobs: "tech", cost: "moderate", desc: "Europe's startup capital", emoji: "🇩🇪" },
+  { name: "Toronto", country: "Canada", lat: 43.65, lng: -79.38, climate: "cold", jobs: "tech", cost: "expensive", desc: "Diverse tech city", emoji: "🇨🇦" },
+  { name: "Amsterdam", country: "Netherlands", lat: 52.37, lng: 4.89, climate: "cold", jobs: "tech", cost: "expensive", desc: "European startup scene", emoji: "🇳🇱" },
+  { name: "Bangkok", country: "Thailand", lat: 13.75, lng: 100.52, climate: "tropical", jobs: "business", cost: "cheap", desc: "Affordable city with great lifestyle", emoji: "🇹🇭" },
+  { name: "Kuala Lumpur", country: "Malaysia", lat: 3.14, lng: 101.69, climate: "tropical", jobs: "tech", cost: "cheap", desc: "Affordable SE Asian tech hub", emoji: "🇲🇾" },
+  { name: "Austin", country: "USA", lat: 30.27, lng: -97.74, climate: "warm", jobs: "tech", cost: "moderate", desc: "USA's fastest growing tech city", emoji: "🇺🇸" },
+  { name: "Lisbon", country: "Portugal", lat: 38.72, lng: -9.14, climate: "warm", jobs: "tech", cost: "moderate", desc: "Europe's sunny startup city", emoji: "🇵🇹" },
+  { name: "Chennai", country: "India", lat: 13.08, lng: 80.27, climate: "tropical", jobs: "tech", cost: "cheap", desc: "South India's IT corridor", emoji: "🇮🇳" },
+];
+
+// Map Setup
+const map = L.map('map').setView([20, 78], 4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap'
+}).addTo(map);
+
+let userMarker = null;
+let cityMarkers = [];
+let userLat = 17.38;
+let userLng = 78.47;
+
+// Get User Location
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(pos => {
+    userLat = pos.coords.latitude;
+    userLng = pos.coords.longitude;
+
+    document.getElementById('location-info').innerHTML =
+      `📍 Your location: <span>Detected!</span><br>Lat: <span>${userLat.toFixed(2)}</span>, Lng: <span>${userLng.toFixed(2)}</span>`;
+
+    if (userMarker) map.removeLayer(userMarker);
+    userMarker = L.marker([userLat, userLng], {
+      icon: L.divIcon({
+        html: '<div style="background:#4ade80;width:16px;height:16px;border-radius:50%;border:3px solid white;box-shadow:0 0 10px #4ade80"></div>',
+        iconSize: [16, 16]
+      })
+    }).addTo(map).bindPopup('📍 You are here!').openPopup();
+
+    map.setView([userLat, userLng], 6);
+  }, () => {
+    document.getElementById('location-info').innerHTML =
+      `📍 Location: <span>Hyderabad (default)</span>`;
+  });
+}
+
+// Distance Calculator
+function getDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371;
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLng = (lng2 - lng1) * Math.PI / 180;
+  const a = Math.sin(dLat/2) ** 2 +
+    Math.cos(lat1 * Math.PI/180) * Math.cos(lat2 * Math.PI/180) * Math.sin(dLng/2) ** 2;
+  return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)));
+}
+
+// Find Cities
+function findCities() {
+  const climate = document.getElementById('climate').value;
+  const jobs = document.getElementById('jobs').value;
+  const cost = document.getElementById('cost').value;
+
+  // Clear old markers
+  cityMarkers.forEach(m => map.removeLayer(m));
+  cityMarkers = [];
+
+  // Filter and score cities
+  let results = cities.map(city => {
+    let score = 0;
+    if (climate === 'any' || city.climate === climate) score += 33;
+    if (jobs === 'any' || city.jobs === jobs) score += 33;
+    if (cost === 'any' || city.cost === cost) score += 34;
+    return { ...city, score, distance: getDistance(userLat, userLng, city.lat, city.lng) };
+  })
+  .filter(c => c.score > 0)
+  .sort((a, b) => b.score - a.score)
+  .slice(0, 6);
+
+  // Show results
+  const resultsDiv = document.getElementById('city-results');
+  document.getElementById('results-title').textContent = `Found ${results.length} matching cities`;
+
+  if (results.length === 0) {
+    resultsDiv.innerHTML = '<p style="color:#64748b;font-size:0.85rem;">No cities match. Try different filters!</p>';
+    return;
+  }
+
+  resultsDiv.innerHTML = results.map(city => `
+    <div class="city-card" onclick="focusCity(${city.lat}, ${city.lng}, '${city.name}')">
+      <div>
+        <span class="match-score">${city.score}% match</span>
+        <h3>${city.emoji} ${city.name}, ${city.country}</h3>
+      </div>
+      <p>${city.desc} · ${city.distance} km away</p>
+      <div class="city-tags">
+        <span class="city-tag tag-climate">🌡️ ${city.climate}</span>
+        <span class="city-tag tag-jobs">💼 ${city.jobs}</span>
+        <span class="city-tag tag-cost">💰 ${city.cost}</span>
+      </div>
+    </div>
+  `).join('');
+
+  // Add markers on map
+  results.forEach(city => {
+    const marker = L.marker([city.lat, city.lng], {
+      icon: L.divIcon({
+        html: `<div style="background:#1a1a2e;border:2px solid #4ade80;border-radius:8px;padding:4px 8px;color:white;font-size:11px;font-weight:600;white-space:nowrap">${city.emoji} ${city.name}</div>`,
+        iconSize: [100, 30]
+      })
+    }).addTo(map);
+
+    marker.bindPopup(`
+      <b>${city.emoji} ${city.name}</b><br>
+      ${city.desc}<br>
+      <small>Match: ${city.score}% | ${city.distance} km away</small>
+    `);
+
+    cityMarkers.push(marker);
+  });
+
+  // Fit map to show all results
+  const group = L.featureGroup(cityMarkers);
+  if (userMarker) group.addLayer(userMarker);
+  map.fitBounds(group.getBounds().pad(0.2));
+}
+
+function focusCity(lat, lng, name) {
+  map.setView([lat, lng], 8);
+}
+</script>
+</body>
+</html>
